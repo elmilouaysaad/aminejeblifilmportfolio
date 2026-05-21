@@ -28,10 +28,9 @@ function initWorkModal() {
 
     const titleText = preview.querySelector('h2')?.textContent || '';
 
-    // Build modal content from scratch instead of cloning
     modalContent.innerHTML = '';
 
-    // Title
+    // Inject title at the top
     if (titleText) {
       const title = document.createElement('h2');
       title.className = 'modal-title';
@@ -39,73 +38,10 @@ function initWorkModal() {
       modalContent.appendChild(title);
     }
 
-    // Log line
-    const logLineEl = source.querySelector('.log-line');
-    if (logLineEl) {
-      const p = document.createElement('p');
-      p.className = 'log-line';
-      p.textContent = logLineEl.textContent;
-      modalContent.appendChild(p);
-    }
-
-    // Video embed — built fresh with preload hints
-    const videoSlot = source.querySelector('.video-embed-slot');
-    if (videoSlot) {
-      const newSlot = document.createElement('div');
-      newSlot.className = 'video-embed-slot';
-
-      const iframe = videoSlot.querySelector('iframe');
-      if (iframe) {
-        const newIframe = document.createElement('iframe');
-
-        // Preload hints for faster embed loading
-        newIframe.setAttribute('loading', 'eager');
-        newIframe.setAttribute('fetchpriority', 'high');
-        newIframe.setAttribute('decoding', 'async');
-
-        // Core attributes
-        newIframe.src = iframe.getAttribute('src');
-        newIframe.width = iframe.getAttribute('width') || '640';
-        newIframe.height = iframe.getAttribute('height') || '360';
-        newIframe.setAttribute('frameborder', '0');
-        newIframe.setAttribute('scrolling', 'no');
-        newIframe.setAttribute('allowfullscreen', '');
-        newIframe.setAttribute('title', iframe.getAttribute('title') || '');
-
-        newSlot.appendChild(newIframe);
-      }
-      modalContent.appendChild(newSlot);
-    }
-
-    // Images
-    const imageSpot = source.querySelector('.image-spot--two');
-    if (imageSpot) {
-      const newSpot = document.createElement('div');
-      newSpot.className = 'image-spot image-spot--two';
-      imageSpot.querySelectorAll('figure').forEach(fig => {
-        const newFig = document.createElement('figure');
-        const img = fig.querySelector('img');
-        if (img) {
-          const newImg = document.createElement('img');
-          newImg.src = img.getAttribute('src');
-          newImg.alt = img.getAttribute('alt') || '';
-          newImg.setAttribute('loading', 'eager');
-          newImg.setAttribute('decoding', 'async');
-          newFig.appendChild(newImg);
-        }
-        newSpot.appendChild(newFig);
-      });
-      modalContent.appendChild(newSpot);
-    }
-
-    // Personal statement
-    const statement = source.querySelector('.personal-statement');
-    if (statement) {
-      const newStatement = document.createElement('div');
-      newStatement.className = 'personal-statement';
-      newStatement.innerHTML = statement.innerHTML;
-      modalContent.appendChild(newStatement);
-    }
+    // Clone all children from the hidden template
+    Array.from(source.children).forEach(child => {
+      modalContent.appendChild(child.cloneNode(true));
+    });
 
     modal.hidden = false;
     document.body.style.overflow = 'hidden';

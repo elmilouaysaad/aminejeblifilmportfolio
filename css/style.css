@@ -313,11 +313,13 @@ main {
   outline-offset: 2px;
 }
 
+/* ── Preview media with play button ── */
 .preview-media {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #eae5dd;
+  position: relative; /* establish positioning context */
 }
 
 .preview-media img {
@@ -331,6 +333,51 @@ main {
 .work-block-preview:hover .preview-media img {
   transform: scale(1.03);
 }
+
+/* White circular play button */
+.preview-media::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  z-index: 2;
+  pointer-events: none;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+/* Play triangle */
+.preview-media::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-35%, -50%);
+  width: 0;
+  height: 0;
+  border-left: 22px solid var(--accent);
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  z-index: 3;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.work-block-preview:hover .preview-media::before {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: #fff;
+}
+
+.work-block-preview:hover .preview-media::after {
+  transform: translate(-35%, -50%) scale(1.12);
+}
+
+/* ── /Preview media ── */
 
 .preview-meta {
   padding: 1rem 1.25rem;
@@ -430,8 +477,10 @@ main {
   background: #111;
 }
 
+/* ── Responsive modal iframe (fixed height override) ── */
 .modal-content .video-embed-slot iframe {
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   border: 0;
   display: block;
@@ -593,4 +642,116 @@ main {
   .work-modal {
     padding: 3.5rem 1rem 2rem;
   }
+}
+/* ── Play button overlay ── */
+.preview-media {
+  position: relative; /* establish positioning context */
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
+  z-index: 5;
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Play triangle */
+.play-button::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 24px solid var(--accent);
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  margin-left: 5px;
+  transition: border-left-color 0.25s ease;
+}
+
+.play-button:hover,
+.play-button:focus {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: #ffffff;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.45);
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Darken image slightly on hover so the button pops */
+.preview-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 2;
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.work-block-preview:hover .preview-media::before {
+  background: rgba(0, 0, 0, 0.18);
+}
+/* ── Black video-link block inside modal ── */
+.video-link-area {
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.video-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.video-play-btn:hover,
+.video-play-btn:focus-visible {
+  transform: translateY(-3px);
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.play-icon {
+  width: 0;
+  height: 0;
+  border-left: 20px solid var(--accent);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  display: inline-block;
+}
+
+/* Remove old thumbnail play-button styles if they exist */
+.preview-media .play-button,
+.preview-media::before,
+.preview-media::after {
+  display: none !important;
 }
