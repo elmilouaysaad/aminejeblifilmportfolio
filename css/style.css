@@ -269,6 +269,15 @@ main {
   margin-bottom: 0.75rem;
 }
 
+.about-featured {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.about-featured h3 {
+  font-size: 2.2rem;
+}
+
 .work-intro,
 .contact-intro {
   max-width: 760px;
